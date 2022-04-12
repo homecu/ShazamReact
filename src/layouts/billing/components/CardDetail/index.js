@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
@@ -15,17 +15,39 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 import { CardsContext } from "context/CardsContext";
+import Loader from "components/Loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 function CardDetailComponent() {
-  const { cardDetail } = useContext(CardsContext);
+  const navigate = useNavigate();
+  const { cardDetail, cardBlock, loading, changeStatusCard, loadCardDetailStatus, loadingToggle } =
+    useContext(CardsContext);
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  console.log(cardDetail);
+
   const [checked, setChecked] = useState(true);
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = async (event) => {
+    await changeStatusCard(event.target.checked);
   };
+  const loadDetail = async () => {
+    await loadCardDetailStatus(cardDetail.tokenPan);
+  };
+
+  useEffect(() => {
+    setChecked(!cardBlock);
+  }, [cardBlock]);
+  useEffect(() => {
+    if (cardDetail.tokenPan === undefined) {
+      console.log("ACAAAAAAAAAAAAAAAA");
+      navigate("/dashboard");
+    }
+  }, []);
+  useEffect(() => {
+    if (cardDetail.tokenPan) {
+      loadDetail();
+    }
+  }, []);
 
   return (
     <Card id="delete-account">
@@ -39,104 +61,175 @@ function CardDetailComponent() {
         </MDButton>
       </MDBox>
       <MDBox p={2}>
-        <Grid container spacing={3} flexDirection="column">
-          <Grid item xs={12} md={7}>
-            <MDBox
-              borderRadius="lg"
-              display="flex"
-              justifyContent="space-between"
-              p={3}
-              sx={{
-                border: ({ borders: { borderWidth, borderColor } }) =>
-                  `${borderWidth[1]} solid ${borderColor}`,
-              }}
-            >
-              <MDBox display="flex" flexDirection="column">
-                <MDTypography variant="h6" fontWeight="medium">
-                  ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;
-                  {cardDetail.tokenPan.substr(cardDetail.tokenPan.length - 4)}
-                </MDTypography>
-                <MDTypography variant="h6" fontWeight="medium">
-                  Turn Card On / Off
-                </MDTypography>
-              </MDBox>
-              <MDBox
-                ml="auto"
-                lineHeight={0}
-                color={darkMode ? "white" : "dark"}
-                flexDirection="column"
-                display="flex"
-              >
-                <MDBox sx={{ paddingTop: "1rem" }} />
-                <Switch color="warning" checked={checked} onChange={handleChange} />
-                <MDTypography variant="h6" fontWeight="medium" sx={{ marginLeft: "1rem" }}>
-                  {checked ? "On" : "Off"}
-                </MDTypography>
-              </MDBox>
-            </MDBox>
+        {loading ? (
+          <Grid item xs={12}>
+            <Loader />
           </Grid>
-          <MDBox pt={2} px={3} display="flex" justifyContent="space-between" alignItems="center">
-            <MDTypography variant="h6" fontWeight="medium">
-              Card Alerts
-            </MDTypography>
-          </MDBox>
-          <Grid item xs={12} md={7}>
-            <MDBox
-              borderRadius="lg"
-              display="flex"
-              justifyContent="space-between"
-              p={3}
-              alignItems="center"
-              sx={{
-                border: ({ borders: { borderWidth, borderColor } }) =>
-                  `${borderWidth[1]} solid ${borderColor}`,
-              }}
-            >
-              <MDBox display="flex" flexDirection="column">
-                <MDTypography variant="h5" fontWeight="medium">
-                  Transactions Amount
-                </MDTypography>
-              </MDBox>
+        ) : (
+          <Grid container justifyContent="center" display="flex" alignItems="center">
+            <Grid item xs={12} md={7}>
               <MDBox
-                ml="auto"
-                lineHeight={0}
-                color={darkMode ? "white" : "dark"}
-                flexDirection="column"
+                borderRadius="lg"
                 display="flex"
+                justifyContent="space-between"
+                mb={3}
+                p={3}
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
               >
-                <ArrowForwardIosIcon fontSize="large" />
+                <MDBox display="flex" flexDirection="column">
+                  <MDTypography variant="h6" fontWeight="medium">
+                    ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;
+                    {cardDetail.tokenPan?.substr(cardDetail.tokenPan.length - 4)}
+                  </MDTypography>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Turn Card On / Off
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  ml="auto"
+                  lineHeight={0}
+                  color={darkMode ? "white" : "dark"}
+                  flexDirection="column"
+                  display="flex"
+                >
+                  <MDBox sx={{ paddingTop: "1rem" }} />
+                  {loadingToggle ? (
+                    <Loader />
+                  ) : (
+                    <>
+                      <Switch color="warning" checked={checked} onChange={handleChange} />
+                      <MDTypography variant="h6" fontWeight="medium" sx={{ marginLeft: "1rem" }}>
+                        {checked ? "On" : "Off"}
+                      </MDTypography>
+                    </>
+                  )}
+                </MDBox>
               </MDBox>
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <MDBox
-              borderRadius="lg"
-              display="flex"
-              justifyContent="space-between"
-              p={3}
-              alignItems="center"
-              sx={{
-                border: ({ borders: { borderWidth, borderColor } }) =>
-                  `${borderWidth[1]} solid ${borderColor}`,
-              }}
-            >
-              <MDBox display="flex" flexDirection="column">
-                <MDTypography variant="h5" fontWeight="medium">
-                  Internet & Phone Transactions
-                </MDTypography>
-              </MDBox>
+            </Grid>
+
+            <Grid item xs={12} md={7}>
+              <MDTypography variant="h6" fontWeight="medium" mb={3}>
+                Card Alerts
+              </MDTypography>
               <MDBox
-                ml="auto"
-                lineHeight={0}
-                color={darkMode ? "white" : "dark"}
-                flexDirection="column"
+                borderRadius="lg"
                 display="flex"
+                justifyContent="space-between"
+                p={3}
+                mb={3}
+                alignItems="center"
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
               >
-                <ArrowForwardIosIcon fontSize="large" />
+                <MDBox display="flex" flexDirection="column">
+                  <MDTypography variant="h5" fontWeight="medium">
+                    Transactions Amount
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  ml="auto"
+                  lineHeight={0}
+                  color={darkMode ? "white" : "dark"}
+                  flexDirection="column"
+                  display="flex"
+                >
+                  <ArrowForwardIosIcon fontSize="large" />
+                </MDBox>
               </MDBox>
-            </MDBox>
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <MDBox
+                borderRadius="lg"
+                display="flex"
+                justifyContent="space-between"
+                p={3}
+                mb={3}
+                alignItems="center"
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
+              >
+                <MDBox display="flex" flexDirection="column">
+                  <MDTypography variant="h5" fontWeight="medium">
+                    Internet & Phone Transactions
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  ml="auto"
+                  lineHeight={0}
+                  color={darkMode ? "white" : "dark"}
+                  flexDirection="column"
+                  display="flex"
+                >
+                  <ArrowForwardIosIcon fontSize="large" />
+                </MDBox>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <MDBox
+                borderRadius="lg"
+                display="flex"
+                justifyContent="space-between"
+                p={3}
+                mb={3}
+                alignItems="center"
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
+              >
+                <MDBox display="flex" flexDirection="column">
+                  <MDTypography variant="h5" fontWeight="medium">
+                    International Transactions
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  ml="auto"
+                  lineHeight={0}
+                  color={darkMode ? "white" : "dark"}
+                  flexDirection="column"
+                  display="flex"
+                >
+                  <ArrowForwardIosIcon fontSize="large" />
+                </MDBox>
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <MDBox
+                borderRadius="lg"
+                display="flex"
+                justifyContent="space-between"
+                p={3}
+                alignItems="center"
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
+              >
+                <MDBox display="flex" flexDirection="column">
+                  <MDTypography variant="h5" fontWeight="medium">
+                    Suspected Fraud Alerts
+                  </MDTypography>
+                </MDBox>
+                <MDBox
+                  ml="auto"
+                  lineHeight={0}
+                  color={darkMode ? "white" : "dark"}
+                  flexDirection="column"
+                  display="flex"
+                >
+                  <ArrowForwardIosIcon fontSize="large" />
+                </MDBox>
+              </MDBox>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </MDBox>
     </Card>
   );

@@ -20,7 +20,7 @@ import Loader from "components/Loader/Loader";
 function PaymentMethod() {
   const navigate = useNavigate();
 
-  const { cards, loading, setCardDetail } = useContext(CardsContext);
+  const { cards, loading, error, setCardDetail } = useContext(CardsContext);
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const navigateGo = (card) => {
@@ -42,7 +42,10 @@ function PaymentMethod() {
         </MDButton>
       </MDBox>
       <MDBox p={2}>
-        <Grid container spacing={3}>
+        <Grid container justifyContent="center" display="flex" alignItems="center">
+          <Grid item xs={12}>
+            {error && <p>Se ha producido un error al obtener tarjeta</p>}
+          </Grid>
           {loading ? (
             <Grid item xs={12}>
               <Loader />
