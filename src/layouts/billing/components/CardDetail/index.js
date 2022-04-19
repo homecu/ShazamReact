@@ -39,7 +39,6 @@ function CardDetailComponent() {
   }, [cardBlock]);
   useEffect(() => {
     if (cardDetail.tokenPan === undefined) {
-      console.log("ACAAAAAAAAAAAAAAAA");
       navigate("/dashboard");
     }
   }, []);
@@ -124,7 +123,9 @@ function CardDetailComponent() {
                 sx={{
                   border: ({ borders: { borderWidth, borderColor } }) =>
                     `${borderWidth[1]} solid ${borderColor}`,
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate("/dashboard/card-detail/transaction-amount")}
               >
                 <MDBox display="flex" flexDirection="column">
                   <MDTypography variant="h5" fontWeight="medium">

@@ -48,6 +48,7 @@ import SignUp from "layouts/authentication/sign-up";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import CardDetail from "layouts/cardDetail";
+import TransactionAmount from "layouts/transactionAmount";
 
 const routes = [
   {
@@ -62,6 +63,11 @@ const routes = [
     route: "/dashboard/card-detail",
     component: <CardDetail />,
     key: "CardDetail",
+  },
+  {
+    route: "/dashboard/card-detail/transaction-amount",
+    component: <TransactionAmount />,
+    key: "TransactionAmount",
   },
   {
     type: "collapse",
