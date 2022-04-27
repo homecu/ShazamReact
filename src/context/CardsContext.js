@@ -19,6 +19,12 @@ export const CardsProvider = ({ children }) => {
   const [error, setError] = useState(false);
   const [cardBlock, setCardBlock] = useState(true);
   const [loadingToggle, setLoadingToggle] = useState(false);
+  const [alertSettingsValues, setAlertSettingsValues] = useState({
+    highDollarThreshold: 0,
+    primaryEmail: false,
+    secondaryEmail: false,
+    sms: false,
+  });
 
   useEffect(() => {
     loadCards();
@@ -156,6 +162,13 @@ export const CardsProvider = ({ children }) => {
       const json = await res.json();
 
       console.log(json.data);
+      setAlertSettingsValues({
+        ...alertSettingsValues,
+        highDollarThreshold: json.data.highDollarThreshold,
+        primaryEmail: json.data.primaryEmail,
+        secondaryEmail: json.data.secondaryEmail,
+        sms: json.data.sms,
+      });
       // setCardBlock(json.data.blocked);
       setLoading(false);
       setError(false);
@@ -231,6 +244,7 @@ export const CardsProvider = ({ children }) => {
         cardDetail,
         changeSaved,
         loadingToggle,
+        alertSettingsValues,
         loadCards,
         setCardDetail,
         changeStatusCard,

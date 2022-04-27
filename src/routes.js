@@ -49,6 +49,9 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 import CardDetail from "layouts/cardDetail";
 import TransactionAmount from "layouts/transactionAmount";
+import Internet from "layouts/internetTransactions";
+import InternationalTransactions from "layouts/internationalTransactions";
+import SuspectedFraudAlerts from "layouts/suspectedFraudAlerts";
 
 const routes = [
   {
@@ -68,6 +71,21 @@ const routes = [
     route: "/dashboard/card-detail/transaction-amount",
     component: <TransactionAmount />,
     key: "TransactionAmount",
+  },
+  {
+    route: "/dashboard/card-detail/internet-transactions",
+    component: <Internet />,
+    key: "InternetTransactions",
+  },
+  {
+    route: "/dashboard/card-detail/international-transactions",
+    component: <InternationalTransactions />,
+    key: "InternationalTransactions",
+  },
+  {
+    route: "/dashboard/card-detail/suspected-alerts",
+    component: <SuspectedFraudAlerts />,
+    key: "SuspectedFraudAlerts",
   },
   {
     type: "collapse",

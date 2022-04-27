@@ -154,7 +154,10 @@ function CardDetailComponent() {
                 sx={{
                   border: ({ borders: { borderWidth, borderColor } }) =>
                     `${borderWidth[1]} solid ${borderColor}`,
+
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate("/dashboard/card-detail/internet-transactions")}
               >
                 <MDBox display="flex" flexDirection="column">
                   <MDTypography variant="h5" fontWeight="medium">
@@ -183,7 +186,9 @@ function CardDetailComponent() {
                 sx={{
                   border: ({ borders: { borderWidth, borderColor } }) =>
                     `${borderWidth[1]} solid ${borderColor}`,
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate("/dashboard/card-detail/international-transactions")}
               >
                 <MDBox display="flex" flexDirection="column">
                   <MDTypography variant="h5" fontWeight="medium">
@@ -211,7 +216,9 @@ function CardDetailComponent() {
                 sx={{
                   border: ({ borders: { borderWidth, borderColor } }) =>
                     `${borderWidth[1]} solid ${borderColor}`,
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate("/dashboard/card-detail/suspected-alerts")}
               >
                 <MDBox display="flex" flexDirection="column">
                   <MDTypography variant="h5" fontWeight="medium">
