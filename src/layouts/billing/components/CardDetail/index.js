@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 import Switch from "@mui/material/Switch";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -17,11 +18,17 @@ import { useMaterialUIController } from "context";
 import { CardsContext } from "context/CardsContext";
 import Loader from "components/Loader/Loader";
 import { useNavigate } from "react-router-dom";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 
 function CardDetailComponent() {
   const navigate = useNavigate();
   const { cardDetail, cardBlock, loading, changeStatusCard, loadCardDetailStatus, loadingToggle } =
     useContext(CardsContext);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChangeAccordion = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -108,133 +115,182 @@ function CardDetailComponent() {
                 </MDBox>
               </MDBox>
             </Grid>
+            <Grid item xs={12} md={7}>
+              <Accordion
+                expanded={expanded === "panel1"}
+                onChange={handleChangeAccordion("panel1")}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1bh-content"
+                  id="panel1bh-header"
+                >
+                  <Typography sx={{ width: "33%", flexShrink: 0 }}>Card Alerts</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <MDBox
+                    borderRadius="lg"
+                    display="flex"
+                    justifyContent="space-between"
+                    p={3}
+                    mb={3}
+                    alignItems="center"
+                    sx={{
+                      border: ({ borders: { borderWidth, borderColor } }) =>
+                        `${borderWidth[1]} solid ${borderColor}`,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/dashboard/card-detail/transaction-amount")}
+                  >
+                    <MDBox display="flex" flexDirection="column">
+                      <MDTypography variant="h5" fontWeight="medium">
+                        Transactions Amount
+                      </MDTypography>
+                    </MDBox>
+                    <MDBox
+                      ml="auto"
+                      lineHeight={0}
+                      color={darkMode ? "white" : "dark"}
+                      flexDirection="column"
+                      display="flex"
+                    >
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </MDBox>
+                  </MDBox>
 
-            <Grid item xs={12} md={7}>
-              <MDTypography variant="h6" fontWeight="medium" mb={3}>
-                Card Alerts
-              </MDTypography>
-              <MDBox
-                borderRadius="lg"
-                display="flex"
-                justifyContent="space-between"
-                p={3}
-                mb={3}
-                alignItems="center"
-                sx={{
-                  border: ({ borders: { borderWidth, borderColor } }) =>
-                    `${borderWidth[1]} solid ${borderColor}`,
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/dashboard/card-detail/transaction-amount")}
-              >
-                <MDBox display="flex" flexDirection="column">
-                  <MDTypography variant="h5" fontWeight="medium">
-                    Transactions Amount
-                  </MDTypography>
-                </MDBox>
-                <MDBox
-                  ml="auto"
-                  lineHeight={0}
-                  color={darkMode ? "white" : "dark"}
-                  flexDirection="column"
-                  display="flex"
-                >
-                  <ArrowForwardIosIcon fontSize="large" />
-                </MDBox>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={7}>
-              <MDBox
-                borderRadius="lg"
-                display="flex"
-                justifyContent="space-between"
-                p={3}
-                mb={3}
-                alignItems="center"
-                sx={{
-                  border: ({ borders: { borderWidth, borderColor } }) =>
-                    `${borderWidth[1]} solid ${borderColor}`,
+                  <MDBox
+                    borderRadius="lg"
+                    display="flex"
+                    justifyContent="space-between"
+                    p={3}
+                    mb={3}
+                    alignItems="center"
+                    sx={{
+                      border: ({ borders: { borderWidth, borderColor } }) =>
+                        `${borderWidth[1]} solid ${borderColor}`,
 
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/dashboard/card-detail/internet-transactions")}
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/dashboard/card-detail/internet-transactions")}
+                  >
+                    <MDBox display="flex" flexDirection="column">
+                      <MDTypography variant="h5" fontWeight="medium">
+                        Internet & Phone Transactions
+                      </MDTypography>
+                    </MDBox>
+                    <MDBox
+                      ml="auto"
+                      lineHeight={0}
+                      color={darkMode ? "white" : "dark"}
+                      flexDirection="column"
+                      display="flex"
+                    >
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </MDBox>
+                  </MDBox>
+
+                  <MDBox
+                    borderRadius="lg"
+                    display="flex"
+                    justifyContent="space-between"
+                    p={3}
+                    mb={3}
+                    alignItems="center"
+                    sx={{
+                      border: ({ borders: { borderWidth, borderColor } }) =>
+                        `${borderWidth[1]} solid ${borderColor}`,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/dashboard/card-detail/international-transactions")}
+                  >
+                    <MDBox display="flex" flexDirection="column">
+                      <MDTypography variant="h5" fontWeight="medium">
+                        International Transactions
+                      </MDTypography>
+                    </MDBox>
+                    <MDBox
+                      ml="auto"
+                      lineHeight={0}
+                      color={darkMode ? "white" : "dark"}
+                      flexDirection="column"
+                      display="flex"
+                    >
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </MDBox>
+                  </MDBox>
+
+                  <MDBox
+                    borderRadius="lg"
+                    display="flex"
+                    justifyContent="space-between"
+                    p={3}
+                    alignItems="center"
+                    sx={{
+                      border: ({ borders: { borderWidth, borderColor } }) =>
+                        `${borderWidth[1]} solid ${borderColor}`,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/dashboard/card-detail/suspected-alerts")}
+                  >
+                    <MDBox display="flex" flexDirection="column">
+                      <MDTypography variant="h5" fontWeight="medium">
+                        Suspected Fraud Alerts
+                      </MDTypography>
+                    </MDBox>
+                    <MDBox
+                      ml="auto"
+                      lineHeight={0}
+                      color={darkMode ? "white" : "dark"}
+                      flexDirection="column"
+                      display="flex"
+                    >
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </MDBox>
+                  </MDBox>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                expanded={expanded === "panel2"}
+                onChange={handleChangeAccordion("panel2")}
               >
-                <MDBox display="flex" flexDirection="column">
-                  <MDTypography variant="h5" fontWeight="medium">
-                    Internet & Phone Transactions
-                  </MDTypography>
-                </MDBox>
-                <MDBox
-                  ml="auto"
-                  lineHeight={0}
-                  color={darkMode ? "white" : "dark"}
-                  flexDirection="column"
-                  display="flex"
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2bh-content"
+                  id="panel2bh-header"
                 >
-                  <ArrowForwardIosIcon fontSize="large" />
-                </MDBox>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={7}>
-              <MDBox
-                borderRadius="lg"
-                display="flex"
-                justifyContent="space-between"
-                p={3}
-                mb={3}
-                alignItems="center"
-                sx={{
-                  border: ({ borders: { borderWidth, borderColor } }) =>
-                    `${borderWidth[1]} solid ${borderColor}`,
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/dashboard/card-detail/international-transactions")}
-              >
-                <MDBox display="flex" flexDirection="column">
-                  <MDTypography variant="h5" fontWeight="medium">
-                    International Transactions
-                  </MDTypography>
-                </MDBox>
-                <MDBox
-                  ml="auto"
-                  lineHeight={0}
-                  color={darkMode ? "white" : "dark"}
-                  flexDirection="column"
-                  display="flex"
-                >
-                  <ArrowForwardIosIcon fontSize="large" />
-                </MDBox>
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={7}>
-              <MDBox
-                borderRadius="lg"
-                display="flex"
-                justifyContent="space-between"
-                p={3}
-                alignItems="center"
-                sx={{
-                  border: ({ borders: { borderWidth, borderColor } }) =>
-                    `${borderWidth[1]} solid ${borderColor}`,
-                  cursor: "pointer",
-                }}
-                onClick={() => navigate("/dashboard/card-detail/suspected-alerts")}
-              >
-                <MDBox display="flex" flexDirection="column">
-                  <MDTypography variant="h5" fontWeight="medium">
-                    Suspected Fraud Alerts
-                  </MDTypography>
-                </MDBox>
-                <MDBox
-                  ml="auto"
-                  lineHeight={0}
-                  color={darkMode ? "white" : "dark"}
-                  flexDirection="column"
-                  display="flex"
-                >
-                  <ArrowForwardIosIcon fontSize="large" />
-                </MDBox>
-              </MDBox>
+                  <Typography sx={{ width: "33%", flexShrink: 0 }}>Travel Memos</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <MDBox
+                    borderRadius="lg"
+                    display="flex"
+                    justifyContent="space-between"
+                    p={3}
+                    alignItems="center"
+                    sx={{
+                      border: ({ borders: { borderWidth, borderColor } }) =>
+                        `${borderWidth[1]} solid ${borderColor}`,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/dashboard/card-detail/travel-memos")}
+                  >
+                    <MDBox display="flex" flexDirection="column">
+                      <MDTypography variant="h5" fontWeight="medium">
+                        Manage Travel Memos
+                      </MDTypography>
+                    </MDBox>
+                    <MDBox
+                      ml="auto"
+                      lineHeight={0}
+                      color={darkMode ? "white" : "dark"}
+                      flexDirection="column"
+                      display="flex"
+                    >
+                      <ArrowForwardIosIcon fontSize="large" />
+                    </MDBox>
+                  </MDBox>
+                </AccordionDetails>
+              </Accordion>
             </Grid>
           </Grid>
         )}

@@ -52,6 +52,8 @@ import TransactionAmount from "layouts/transactionAmount";
 import Internet from "layouts/internetTransactions";
 import InternationalTransactions from "layouts/internationalTransactions";
 import SuspectedFraudAlerts from "layouts/suspectedFraudAlerts";
+import TravelMemos from "layouts/travelMemos";
+import TravelMemoDetail from "layouts/travelMemosDetail";
 
 const routes = [
   {
@@ -86,6 +88,16 @@ const routes = [
     route: "/dashboard/card-detail/suspected-alerts",
     component: <SuspectedFraudAlerts />,
     key: "SuspectedFraudAlerts",
+  },
+  {
+    route: "/dashboard/card-detail/travel-memos",
+    component: <TravelMemos />,
+    key: "TravelMemos",
+  },
+  {
+    route: "/dashboard/card-detail/travel-memos/travel-memo",
+    component: <TravelMemoDetail />,
+    key: "TravelMemoDetail",
   },
   {
     type: "collapse",

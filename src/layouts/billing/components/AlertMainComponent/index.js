@@ -42,21 +42,21 @@ function AlertMainComponent({ screen, title, headingTwo, headingThree }) {
     secondary: true,
     phone: true,
   });
-  const setInitialValues = async () => {
-    if (cardDetail.tokenPan) {
-      await getAlertSettings(screen);
-      setCheckboxes({
-        ...checkboxes,
-        primary: alertSettingsValues.primaryEmail,
-        secondary: alertSettingsValues.secondaryEmail,
-        phone: alertSettingsValues.sms,
-      });
-      setMaxAmount(+alertSettingsValues.highDollarThreshold);
-    }
-  };
+
   useEffect(() => {
-    setInitialValues();
+    if (cardDetail.tokenPan) {
+      getAlertSettings(screen);
+    }
   }, []);
+  useEffect(() => {
+    setCheckboxes({
+      ...checkboxes,
+      primary: alertSettingsValues.primaryEmail,
+      secondary: alertSettingsValues.secondaryEmail,
+      phone: alertSettingsValues.sms,
+    });
+    setMaxAmount(alertSettingsValues.highDollarThreshold);
+  }, [alertSettingsValues]);
 
   const handleChangeCheckboxes = (e) => {
     setCheckboxes({ ...checkboxes, [e.target.name]: e.target.checked });

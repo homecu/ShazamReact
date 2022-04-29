@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/function-component-definition */
@@ -19,6 +20,9 @@ export const CardsProvider = ({ children }) => {
   const [error, setError] = useState(false);
   const [cardBlock, setCardBlock] = useState(true);
   const [loadingToggle, setLoadingToggle] = useState(false);
+  const [travelMemos, setTravelMemos] = useState([]);
+  const [places, setPlaces] = useState([]);
+
   const [alertSettingsValues, setAlertSettingsValues] = useState({
     highDollarThreshold: 0,
     primaryEmail: false,
@@ -233,24 +237,127 @@ export const CardsProvider = ({ children }) => {
     setCardDetailActive(res);
   };
 
+  const getCardTravelMemos = async () => {
+    const data = { tokenPan: cardDetail.tokenPan };
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=getCardTravelMemos",
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          redirect: "follow",
+          referrerPolicy: "strict-origin",
+          body: JSON.stringify(data),
+        }
+      );
+
+      const json = await res.json();
+      setTravelMemos(json.data);
+      setLoading(false);
+      setError(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+      setError(true);
+    }
+  };
+  function SortArray(x, y) {
+    return x.place.localeCompare(y.place);
+  }
+  const getDestinations = async () => {
+    const data = { tokenPan: cardDetail.tokenPan };
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=getDestinations",
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          redirect: "follow",
+          referrerPolicy: "strict-origin",
+          body: JSON.stringify(data),
+        }
+      );
+
+      const json = await res.json();
+      setPlaces(
+        Object.entries(json)
+          .map((e) => ({ place: e[1], code: e[0] }))
+          .sort(SortArray)
+      );
+
+      setTravelMemos(json.data);
+      setLoading(false);
+      setError(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+      setError(true);
+    }
+  };
+
+  const createTravelMemo = async (destinations, endDate, startDate, memo, tripName) => {
+    const data = {
+      tokenPan: cardDetail.tokenPan,
+      destinations,
+      endDate,
+      startDate,
+      memo,
+      tripName,
+    };
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=createTravelMemo",
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          redirect: "follow",
+          referrerPolicy: "strict-origin",
+          body: JSON.stringify(data),
+        }
+      );
+
+      const json = await res.json();
+      console.log(json);
+      setTravelMemos(json.data);
+      setLoading(false);
+      setError(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+      setError(true);
+    }
+  };
+
+  // const arrayOfObj = Object.entries(hola).map((e) => ({ place: e[1], code: e[0] }));
   return (
     <CardsContext.Provider
       value={{
         user,
         error,
         cards,
+        places,
         loading,
         cardBlock,
         cardDetail,
+        travelMemos,
         changeSaved,
         loadingToggle,
         alertSettingsValues,
         loadCards,
         setCardDetail,
+        getDestinations,
         changeStatusCard,
         getAlertSettings,
         setAlertSettings,
         loadCardDetailStatus,
+        createTravelMemo,
+        getCardTravelMemos,
       }}
     >
       {children}

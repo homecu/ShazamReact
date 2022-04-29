@@ -1,4 +1,5 @@
-import { useContext } from "react";
+/* eslint-disable no-nested-ternary */
+import { useContext, useEffect } from "react";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
@@ -16,11 +17,13 @@ import MDButton from "components/MDButton";
 import { useMaterialUIController } from "context";
 import { CardsContext } from "context/CardsContext";
 import Loader from "components/Loader/Loader";
+import { Box } from "@mui/material";
 
-function PaymentMethod() {
+function TravelMemo() {
   const navigate = useNavigate();
 
-  const { cards, loading, error, setCardDetail } = useContext(CardsContext);
+  const { loading, error, setCardDetail, getCardTravelMemos, travelMemos } =
+    useContext(CardsContext);
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const navigateGo = (card) => {
@@ -29,20 +32,32 @@ function PaymentMethod() {
     setCardDetail(card);
     console.log(card);
   };
+  useEffect(() => {
+    getCardTravelMemos();
+  }, []);
 
   return (
     <Card id="delete-account">
       <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium">
-          Cards Dashboard
+          Manage Travel Memos
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
+        <MDButton
+          variant="gradient"
+          color="dark"
+          onClick={() => navigate("/dashboard/card-detail/travel-memos/travel-memo")}
+        >
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-          &nbsp;add new card
+          &nbsp;add new Travel Memo
         </MDButton>
       </MDBox>
       <MDBox p={2}>
         <Grid container justifyContent="center" display="flex" alignItems="center">
+          <Box mb={4}>
+            <MDTypography variant="h3" fontWeight="medium" mb={2}>
+              Manage Travel Memos
+            </MDTypography>
+          </Box>
           <Grid item xs={12}>
             {error && <p>Se ha producido un error al obtener tarjeta</p>}
           </Grid>
@@ -50,16 +65,15 @@ function PaymentMethod() {
             <Grid item xs={12}>
               <Loader />
             </Grid>
-          ) : (
-            cards.map((res) => (
-              <Grid item xs={12} md={7} key={res.tokenPan}>
+          ) : travelMemos?.length > 0 ? (
+            travelMemos.map((res) => (
+              <Grid item xs={12} md={6} key={res.tokenPan}>
                 <MDBox
                   borderRadius="lg"
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
                   p={3}
-                  mb={4}
                   sx={{
                     border: ({ borders: { borderWidth, borderColor } }) =>
                       `${borderWidth[1]} solid ${borderColor}`,
@@ -81,6 +95,8 @@ function PaymentMethod() {
                 </MDBox>
               </Grid>
             ))
+          ) : (
+            <>No Travel Memos found</>
           )}
         </Grid>
       </MDBox>
@@ -88,4 +104,4 @@ function PaymentMethod() {
   );
 }
 
-export default PaymentMethod;
+export default TravelMemo;
