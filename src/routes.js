@@ -95,6 +95,7 @@ const routes = [
     key: "TravelMemos",
   },
   {
+    type: "collapse",
     route: "/dashboard/card-detail/travel-memos/travel-memo",
     component: <TravelMemoDetail />,
     key: "TravelMemoDetail",
