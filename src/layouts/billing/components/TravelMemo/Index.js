@@ -22,18 +22,21 @@ import { Box } from "@mui/material";
 function TravelMemo() {
   const navigate = useNavigate();
 
-  const { loading, error, setCardDetail, getCardTravelMemos, travelMemos } =
+  const { loading, error, setTravelMemoSelected, cardDetail, getCardTravelMemos, travelMemos } =
     useContext(CardsContext);
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  const navigateGo = (card) => {
-    console.log("hola");
-    navigate("/dashboard/card-detail");
-    setCardDetail(card);
-    console.log(card);
+  const navigateGo = (travelMemoSelected) => {
+    setTravelMemoSelected(travelMemoSelected);
+    navigate("/dashboard/card-detail/travel-memos/travel-memo");
   };
   useEffect(() => {
     getCardTravelMemos();
+  }, []);
+  useEffect(() => {
+    if (cardDetail.tokenPan === undefined) {
+      navigate("/dashboard");
+    }
   }, []);
 
   return (
@@ -67,7 +70,7 @@ function TravelMemo() {
             </Grid>
           ) : travelMemos?.length > 0 ? (
             travelMemos.map((res) => (
-              <Grid item xs={12} md={6} key={res.tokenPan}>
+              <Grid item xs={12} md={7} key={res.createdTimestamp}>
                 <MDBox
                   borderRadius="lg"
                   display="flex"
@@ -80,11 +83,21 @@ function TravelMemo() {
                     cursor: "pointer",
                   }}
                   onClick={() => navigateGo(res)}
+                  mb={4}
                 >
-                  <MDTypography variant="h6" fontWeight="medium">
-                    ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp;
-                    {res.tokenPan.substr(res.tokenPan.length - 4)}
-                  </MDTypography>
+                  <MDBox display="flex" justifyContent="space-between" flexDirection="column">
+                    <MDTypography variant="h6" fontWeight="medium">
+                      {res.tripName}
+                    </MDTypography>
+
+                    <MDTypography variant="h6" fontWeight="medium">
+                      {res.startDate} / {res.endDate}
+                    </MDTypography>
+
+                    <MDTypography variant="h6" fontWeight="medium">
+                      {res.memo}
+                    </MDTypography>
+                  </MDBox>
                   <MDBox ml="auto" lineHeight={0} color={darkMode ? "white" : "dark"}>
                     <Tooltip title="Edit Card" placement="top">
                       <Icon sx={{ cursor: "pointer" }} fontSize="small">

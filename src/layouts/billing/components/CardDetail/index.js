@@ -121,7 +121,7 @@ function CardDetailComponent() {
                 onChange={handleChangeAccordion("panel1")}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<ExpandMoreIcon fontSize="medium" />}
                   aria-controls="panel1bh-content"
                   id="panel1bh-header"
                 >
@@ -254,42 +254,20 @@ function CardDetailComponent() {
                 onChange={handleChangeAccordion("panel2")}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={
+                    <ExpandMoreIcon
+                      fontSize="medium"
+                      sx={{
+                        transform: "rotate(270deg)",
+                      }}
+                    />
+                  }
                   aria-controls="panel2bh-content"
                   id="panel2bh-header"
+                  onClick={() => navigate("/dashboard/card-detail/travel-memos")}
                 >
-                  <Typography sx={{ width: "33%", flexShrink: 0 }}>Travel Memos</Typography>
+                  <Typography sx={{ width: "33%", flexShrink: 0 }}>Manage Travel Memos</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <MDBox
-                    borderRadius="lg"
-                    display="flex"
-                    justifyContent="space-between"
-                    p={3}
-                    alignItems="center"
-                    sx={{
-                      border: ({ borders: { borderWidth, borderColor } }) =>
-                        `${borderWidth[1]} solid ${borderColor}`,
-                      cursor: "pointer",
-                    }}
-                    onClick={() => navigate("/dashboard/card-detail/travel-memos")}
-                  >
-                    <MDBox display="flex" flexDirection="column">
-                      <MDTypography variant="h5" fontWeight="medium">
-                        Manage Travel Memos
-                      </MDTypography>
-                    </MDBox>
-                    <MDBox
-                      ml="auto"
-                      lineHeight={0}
-                      color={darkMode ? "white" : "dark"}
-                      flexDirection="column"
-                      display="flex"
-                    >
-                      <ArrowForwardIosIcon fontSize="large" />
-                    </MDBox>
-                  </MDBox>
-                </AccordionDetails>
               </Accordion>
             </Grid>
           </Grid>

@@ -22,6 +22,7 @@ export const CardsProvider = ({ children }) => {
   const [loadingToggle, setLoadingToggle] = useState(false);
   const [travelMemos, setTravelMemos] = useState([]);
   const [places, setPlaces] = useState([]);
+  const [travelMemoSelected, setTravelMemoSelected] = useState(null);
 
   const [alertSettingsValues, setAlertSettingsValues] = useState({
     highDollarThreshold: 0,
@@ -50,7 +51,6 @@ export const CardsProvider = ({ children }) => {
         }
       );
       const json = await res.json();
-      console.log(json);
       setUser({
         ...user,
         primaryAddress: json.data.emailAddress,
@@ -254,7 +254,7 @@ export const CardsProvider = ({ children }) => {
       );
 
       const json = await res.json();
-      setTravelMemos(json.data);
+      setTravelMemos(json.data.travelMemos);
       setLoading(false);
       setError(false);
     } catch (er) {
@@ -264,7 +264,7 @@ export const CardsProvider = ({ children }) => {
     }
   };
   function SortArray(x, y) {
-    return x.place.localeCompare(y.place);
+    return x.name.localeCompare(y.name);
   }
   const getDestinations = async () => {
     const data = { tokenPan: cardDetail.tokenPan };
@@ -285,7 +285,7 @@ export const CardsProvider = ({ children }) => {
       const json = await res.json();
       setPlaces(
         Object.entries(json)
-          .map((e) => ({ place: e[1], code: e[0] }))
+          .map((e) => ({ name: e[1], code: e[0] }))
           .sort(SortArray)
       );
 
@@ -299,7 +299,14 @@ export const CardsProvider = ({ children }) => {
     }
   };
 
-  const createTravelMemo = async (destinations, endDate, startDate, memo, tripName) => {
+  const createTravelMemo = async (
+    destinations,
+    endDate,
+    startDate,
+    memo,
+    tripName,
+    memoId = null
+  ) => {
     const data = {
       tokenPan: cardDetail.tokenPan,
       destinations,
@@ -307,11 +314,15 @@ export const CardsProvider = ({ children }) => {
       startDate,
       memo,
       tripName,
+      realTimeExclusion: true,
+      memoId,
     };
     try {
       setLoading(true);
       const res = await fetch(
-        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=createTravelMemo",
+        `http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=${
+          memoId ? "changeTravelMemo" : "createTravelMemo"
+        }`,
         {
           method: "POST",
           mode: "cors",
@@ -323,8 +334,43 @@ export const CardsProvider = ({ children }) => {
       );
 
       const json = await res.json();
-      console.log(json);
+      if (json.message === "Success") {
+        setChangeSaved(true);
+      }
+      setTimeout(() => {
+        setChangeSaved(false);
+      }, 3000);
       setTravelMemos(json.data);
+      setLoading(false);
+      setError(false);
+    } catch (er) {
+      console.log(er);
+      setLoading(false);
+      setError(true);
+    }
+  };
+
+  const removeTravelMemoById = async (memoId) => {
+    const data = {
+      tokenPan: cardDetail.tokenPan,
+      memoId,
+    };
+    try {
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=cancelTravelMemo",
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          redirect: "follow",
+          referrerPolicy: "strict-origin",
+          body: JSON.stringify(data),
+        }
+      );
+      console.log(res);
+      // const json = await res.json();
+
       setLoading(false);
       setError(false);
     } catch (er) {
@@ -348,6 +394,7 @@ export const CardsProvider = ({ children }) => {
         travelMemos,
         changeSaved,
         loadingToggle,
+        travelMemoSelected,
         alertSettingsValues,
         loadCards,
         setCardDetail,
@@ -355,9 +402,11 @@ export const CardsProvider = ({ children }) => {
         changeStatusCard,
         getAlertSettings,
         setAlertSettings,
-        loadCardDetailStatus,
         createTravelMemo,
         getCardTravelMemos,
+        removeTravelMemoById,
+        loadCardDetailStatus,
+        setTravelMemoSelected,
       }}
     >
       {children}

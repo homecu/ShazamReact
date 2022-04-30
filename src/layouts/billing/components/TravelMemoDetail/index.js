@@ -32,6 +32,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { useTheme } from "@mui/material/styles";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import "react-datepicker/dist/react-datepicker.css";
 import "./style.css";
@@ -49,48 +50,86 @@ const MenuProps = {
 
 function TravelMemoDetail() {
   const navigate = useNavigate();
-  const { cardDetail, loading, changeSaved, places, getDestinations, createTravelMemo } =
-    useContext(CardsContext);
+  const {
+    cardDetail,
+    loading,
+    changeSaved,
+    places,
+    getDestinations,
+    createTravelMemo,
+    travelMemoSelected,
+    removeTravelMemoById,
+  } = useContext(CardsContext);
   const [startDate, setStartDate] = useState(new Date(Date.now()));
   const [endDate, setEndDate] = useState(new Date(Date.now()));
+  const [memoId, setMemoId] = useState(null);
   const [placeName, setPlaceName] = useState([]);
   const theme = useTheme();
   const [formValues, setFormValues] = useState({
     tripName: "",
     memo: "",
   });
+  const [formValuesErrors, setFormErrors] = useState({
+    tripName: false,
+    memo: false,
+    startDate: false,
+    endDate: false,
+    destinations: false,
+  });
+
+  const [errorAlert, setErrorAlert] = useState(false);
 
   const changeHandler = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
   const formatData = () =>
-    placeName.reduce((obj, item) => Object.assign(obj, { [item.code]: item.place }), {});
+    placeName.reduce((obj, item) => Object.assign(obj, { [item.code]: item.name }), {});
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    setErrorAlert(false);
     const startDatedd = startDate.getDate();
     const startDatemm = startDate.getMonth() + 1;
     const startDateyyyy = startDate.getFullYear();
-    const endDatedd = startDate.getDate();
-    const endDatemm = startDate.getMonth() + 1;
-    const endDateyyyy = startDate.getFullYear();
-    const startDateFormated = `${startDateyyyy}/${startDatemm}/${startDatedd}`;
-    const endtDateFormated = `${endDateyyyy}/${endDatemm}/${endDatedd}`;
+    const endDatedd = endDate.getDate();
+    const endDatemm = endDate.getMonth() + 1;
+    const endDateyyyy = endDate.getFullYear();
+    const startDateFormated = `${startDateyyyy}-${startDatemm}-${startDatedd}`;
+    const endtDateFormated = `${endDateyyyy}-${endDatemm}-${endDatedd}`;
+
+    if (formValues.tripName.trim() === "") {
+      setFormErrors({ ...formValuesErrors, tripName: true });
+      setErrorAlert(true);
+      return;
+    }
+
+    if (formValues.memo.trim() === "") {
+      setFormErrors({ ...formValuesErrors, memo: true });
+      setErrorAlert(true);
+      return;
+    }
+
+    if (placeName.length === 0) {
+      setFormErrors({ ...formValuesErrors, destinations: true });
+      setErrorAlert(true);
+      return;
+    }
+    setErrorAlert(false);
 
     createTravelMemo(
       formatData(),
       endtDateFormated,
       startDateFormated,
       formValues.memo,
-      formValues.tripName
+      formValues.tripName,
+      memoId
     );
   };
 
-  function getStyles(name, personName, themeProp) {
+  function getStyles(name, place, themeProp) {
     return {
       fontWeight:
-        personName.indexOf(name) === -1
+        place.indexOf(name) === -1
           ? themeProp.typography.fontWeightRegular
           : themeProp.typography.fontWeightMedium,
     };
@@ -100,11 +139,26 @@ function TravelMemoDetail() {
     const {
       target: { value },
     } = event;
+    console.log(value);
     setPlaceName(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
   };
+  const onBlurTripName = () =>
+    formValues.tripName.trim() === ""
+      ? setFormErrors({ ...formValuesErrors, tripName: true })
+      : setFormErrors({ ...formValuesErrors, tripName: false });
+
+  const onBlurMemo = () =>
+    formValues.memo.trim() === ""
+      ? setFormErrors({ ...formValuesErrors, memo: true })
+      : setFormErrors({ ...formValuesErrors, memo: false });
+
+  const onBlurDestinations = () =>
+    placeName.length === 0
+      ? setFormErrors({ ...formValuesErrors, destinations: true })
+      : setFormErrors({ ...formValuesErrors, destinations: false });
 
   useEffect(() => {
     getDestinations();
@@ -115,7 +169,32 @@ function TravelMemoDetail() {
       navigate("/dashboard");
     }
   }, []);
-  console.log(formValues);
+
+  useEffect(() => {
+    if (changeSaved) {
+      setTimeout(() => {
+        navigate("/dashboard/card-detail/travel-memos");
+      }, 2500);
+    }
+  }, [changeSaved]);
+  useEffect(() => {
+    if (travelMemoSelected) {
+      const datePartsStartDate = travelMemoSelected.startDate.split("-");
+      const datePartsEndDate = travelMemoSelected.endDate.split("-");
+      setFormValues({
+        ...formValues,
+        tripName: travelMemoSelected.tripName,
+        memo: travelMemoSelected.memo,
+      });
+      setPlaceName(travelMemoSelected.destinations);
+      setMemoId(travelMemoSelected.memoId);
+      setStartDate(
+        new Date(`${datePartsStartDate[1]}/${datePartsStartDate[2]}/${datePartsStartDate[0]}`)
+      );
+      setEndDate(new Date(`${datePartsEndDate[1]}/${datePartsEndDate[2]}/${datePartsEndDate[0]}`));
+    }
+  }, [travelMemoSelected]);
+
   return (
     <Card id="delete-account">
       <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
@@ -138,13 +217,34 @@ function TravelMemoDetail() {
               <Grid item xs={12} md={6}>
                 {changeSaved && (
                   <Alert severity="success" sx={{ marginBottom: "30px" }}>
-                    Changes saved successfully!
+                    Travel Memo saved successfully!
+                  </Alert>
+                )}
+                {errorAlert && (
+                  <Alert severity="error" sx={{ marginBottom: "30px" }}>
+                    Please fill all fields
                   </Alert>
                 )}
                 <Box mb={4}>
-                  <MDTypography variant="h3" fontWeight="medium" mb={2}>
-                    Create Travel Memo
-                  </MDTypography>
+                  <Box
+                    sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+                  >
+                    <MDTypography variant="h3" fontWeight="medium" mb={2}>
+                      {travelMemoSelected ? "Edit Travel Memo" : "Create Travel Memo"}
+                    </MDTypography>
+
+                    {travelMemoSelected && (
+                      <Box
+                        sx={{ display: "flex", flexDirection: "row", cursor: "pointer" }}
+                        onClick={() => removeTravelMemoById(memoId)}
+                      >
+                        <DeleteOutlineIcon sx={{ marginTop: 0.2 }} />
+                        <MDTypography variant="h6" fontWeight="medium" mb={2}>
+                          Remove Travel Memo
+                        </MDTypography>
+                      </Box>
+                    )}
+                  </Box>
                   <Typography variant="body1" sx={{ fontSize: "16px" }} mb={1}>
                     Trip Name
                   </Typography>
@@ -156,6 +256,9 @@ function TravelMemoDetail() {
                     value={formValues.tripName}
                     onChange={changeHandler}
                     inputProps={{ maxLength: 12 }}
+                    error={formValuesErrors.tripName}
+                    onBlur={onBlurTripName}
+                    helperText={formValuesErrors.tripName ? "Error!" : " "}
                   />
 
                   <Box mt={2}>
@@ -163,6 +266,7 @@ function TravelMemoDetail() {
                       Start Date
                     </Typography>
                     <DatePicker
+                      dateFormat="yyyy/MM/dd"
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
                       selectsStart
@@ -176,6 +280,7 @@ function TravelMemoDetail() {
                       End Date
                     </Typography>
                     <DatePicker
+                      dateFormat="yyyy/MM/dd"
                       selected={endDate}
                       onChange={(date) => setEndDate(date)}
                       selectsEnd
@@ -190,11 +295,8 @@ function TravelMemoDetail() {
                 <Box>
                   <div>
                     <FormControl sx={{ m: 1, mb: 4, marginLeft: 0 }} fullWidth>
-                      <InputLabel id="demo-multiple-chip-label" fullWidth>
-                        Destinations
-                      </InputLabel>
+                      <InputLabel id="demo-multiple-chip-label">Destinations</InputLabel>
                       <Select
-                        fullWidth
                         labelId="demo-multiple-chip-label"
                         id="demo-multiple-chip"
                         multiple
@@ -205,22 +307,29 @@ function TravelMemoDetail() {
                         renderValue={(selected) => (
                           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
                             {selected.map((value) => (
-                              <Chip key={value.code} label={value.place} />
+                              <Chip key={value.code} label={value.name} />
                             ))}
                           </Box>
                         )}
                         MenuProps={MenuProps}
+                        error={formValuesErrors.destinations}
+                        onBlur={onBlurDestinations}
                       >
                         {places.map((item) => (
                           <MenuItem
                             key={item.code}
                             value={item}
-                            style={getStyles(item.place, placeName, theme)}
+                            style={getStyles(item.name, placeName, theme)}
                           >
-                            {item.place}
+                            {item.name}
                           </MenuItem>
                         ))}
                       </Select>
+                      {formValuesErrors.destinations && (
+                        <Typography color="red" variant="caption" ml={2}>
+                          Error!
+                        </Typography>
+                      )}
                     </FormControl>
                   </div>
                   <TextField
@@ -228,12 +337,14 @@ function TravelMemoDetail() {
                     label="Memo"
                     multiline
                     rows={4}
-                    defaultValue="Small note of the travel"
                     fullWidth
                     name="memo"
                     inputProps={{ maxLength: 200 }}
                     value={formValues.memo}
                     onChange={changeHandler}
+                    error={formValuesErrors.memo}
+                    onBlur={onBlurMemo}
+                    helperText={formValuesErrors.memo ? "Error!" : " "}
                   />
 
                   <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: "30px" }}>
