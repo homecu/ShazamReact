@@ -384,6 +384,7 @@ export const CardsProvider = ({ children }) => {
     const dataInfo = {
       zipFirst5: data.zipCode,
       houseNumber: data.houseNumber,
+      ssn: 222222222,
     };
     try {
       setError(false);
@@ -443,6 +444,40 @@ export const CardsProvider = ({ children }) => {
     }
   };
 
+  const updateUserSettings = async (data) => {
+    const dataInfo = {
+      primaryEmailAddress: data.primaryEmailAddress,
+      secondaryEmailAddress: data.secondaryEmailAddress,
+      phoneNumber: data.phoneNumber,
+      disableSystemAlerts: data.disableSystemAlerts,
+    };
+    try {
+      setError(false);
+      setLoading(true);
+      const res = await fetch(
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=patchUser",
+        {
+          method: "POST",
+          mode: "cors",
+          credentials: "include",
+          redirect: "follow",
+          referrerPolicy: "strict-origin",
+          body: JSON.stringify(dataInfo),
+        }
+      );
+      // if (res.status === 200) {
+      //   setCardBlock(!cardStatus);
+      //   }
+      console.log(res);
+      setError(false);
+      setLoading(false);
+    } catch (er) {
+      console.log(er);
+      setError(true);
+      setLoading(false);
+    }
+  };
+
   // const arrayOfObj = Object.entries(hola).map((e) => ({ place: e[1], code: e[0] }));
   return (
     <CardsContext.Provider
@@ -468,6 +503,7 @@ export const CardsProvider = ({ children }) => {
         getAlertSettings,
         setAlertSettings,
         createTravelMemo,
+        updateUserSettings,
         getCardTravelMemos,
         removeTravelMemoById,
         loadCardDetailStatus,
