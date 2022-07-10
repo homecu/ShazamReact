@@ -455,7 +455,7 @@ export const CardsProvider = ({ children }) => {
       setError(false);
       setLoading(true);
       const res = await fetch(
-        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=patchUser",
+        "http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=enrollEdit",
         {
           method: "POST",
           mode: "cors",
