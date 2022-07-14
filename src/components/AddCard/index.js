@@ -1,10 +1,7 @@
-/* eslint-disable no-unused-vars */
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
-import Switch from "@mui/material/Switch";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 
 // Material Dashboard 2 React components
@@ -18,15 +15,8 @@ import MDButton from "components/MDButton";
 import { useMaterialUIController } from "context";
 import { CardsContext } from "context/CardsContext";
 import Loader from "components/Loader/Loader";
-import { useNavigate } from "react-router-dom";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+
+import { TextField, Typography } from "@mui/material";
 
 function CardDetailComponent() {
   const [formValues, setFormValues] = useState({
@@ -36,52 +26,25 @@ function CardDetailComponent() {
   const changeHandler = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
-  const navigate = useNavigate();
-  const {
-    cardDetail,
-    cardBlock,
-    loading,
-    changeStatusCard,
-    loadCardDetailStatus,
-    loadingToggle,
-    searchCards,
-  } = useContext(CardsContext);
-  const [expanded, setExpanded] = useState(false);
 
-  const handleChangeAccordion = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const { loading, searchCards, cardsSearched, addUserCard } = useContext(CardsContext);
+
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
-  const [checked, setChecked] = useState(true);
-
-  const handleChange = async (event) => {
-    await changeStatusCard(event.target.checked);
-  };
-  const loadDetail = async () => {
-    await loadCardDetailStatus(cardDetail.tokenPan);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("asd");
     searchCards(formValues);
   };
 
-  const cards = [1];
-  console.log(formValues);
+  const addCardMethod = (tokenPan) => addUserCard(tokenPan);
 
   return (
     <Card id="delete-account">
-      <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+      <MDBox pt={2} px={2} display="flex" justifyContent="flex-start" alignItems="center">
         <MDTypography variant="h6" fontWeight="medium">
           Add a Card
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
-          <Icon sx={{ fontWeight: "bold" }}>add</Icon>
-          &nbsp;FINDDDDDD card
-        </MDButton>
       </MDBox>
       <MDBox p={2}>
         <Grid container justifyContent="center" display="flex">
@@ -124,8 +87,8 @@ function CardDetailComponent() {
                 <Loader />
               </Grid>
             ) : (
-              cards.map((res) => (
-                <Grid item key={res.tokenPan}>
+              cardsSearched.map((res) => (
+                <Grid item key={res}>
                   <MDBox
                     borderRadius="lg"
                     display="flex"
@@ -141,7 +104,7 @@ function CardDetailComponent() {
                     }}
                   >
                     <MDTypography variant="h6" fontWeight="medium">
-                      ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp; 444444444
+                      ****&nbsp;&nbsp;****&nbsp;&nbsp;****&nbsp;&nbsp; {res.slice(-6)}
                     </MDTypography>
                     <MDBox
                       ml="auto"
@@ -150,7 +113,11 @@ function CardDetailComponent() {
                       display="flex"
                     >
                       <AddCircleOutlineRoundedIcon fontSize="medium" />
-                      <MDTypography variant="h6" fontWeight="medium">
+                      <MDTypography
+                        variant="h6"
+                        fontWeight="medium"
+                        onClick={() => addCardMethod(res)}
+                      >
                         Add Card
                       </MDTypography>
                     </MDBox>

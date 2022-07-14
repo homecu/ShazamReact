@@ -50,6 +50,7 @@ import Icon from "@mui/material/Icon";
 import CardDetail from "layouts/cardDetail";
 import AddCard from "layouts/addCard";
 import UserSettings from "layouts/userSettings";
+import Enroll from "layouts/enroll";
 import TransactionAmount from "layouts/transactionAmount";
 import Internet from "layouts/internetTransactions";
 import InternationalTransactions from "layouts/internationalTransactions";
@@ -80,6 +81,11 @@ const routes = [
     route: "/dashboard/user-settings",
     component: <UserSettings />,
     key: "UserSettings",
+  },
+  {
+    route: "/dashboard/enroll",
+    component: <Enroll />,
+    key: "Enroll",
   },
   {
     route: "/dashboard/card-detail/transaction-amount",

@@ -23,6 +23,7 @@ export const CardsProvider = ({ children }) => {
   const [travelMemos, setTravelMemos] = useState([]);
   const [places, setPlaces] = useState([]);
   const [travelMemoSelected, setTravelMemoSelected] = useState(null);
+  const [cardsSearched, setCardsSearched] = useState([]);
 
   const [alertSettingsValues, setAlertSettingsValues] = useState({
     highDollarThreshold: 0,
@@ -400,9 +401,9 @@ export const CardsProvider = ({ children }) => {
           body: JSON.stringify(dataInfo),
         }
       );
-      // if (res.status === 200) {
-      //   setCardBlock(!cardStatus);
-      //   }
+
+      const json = await res.json();
+      setCardsSearched(json.data.tokenPans);
       console.log(res);
       setError(false);
       setLoading(false);
@@ -465,9 +466,15 @@ export const CardsProvider = ({ children }) => {
           body: JSON.stringify(dataInfo),
         }
       );
-      // if (res.status === 200) {
-      //   setCardBlock(!cardStatus);
-      //   }
+      const json = await res.json();
+      if (json.message === "Patched") {
+        setChangeSaved(true);
+      }
+
+      setTimeout(() => {
+        setChangeSaved(false);
+      }, 3000);
+
       console.log(res);
       setError(false);
       setLoading(false);
@@ -478,7 +485,41 @@ export const CardsProvider = ({ children }) => {
     }
   };
 
-  // const arrayOfObj = Object.entries(hola).map((e) => ({ place: e[1], code: e[0] }));
+  const enroll = async (data) => {
+    const dataInfo = {
+      primaryEmailAddress: data.primaryEmailAddress,
+      secondaryEmailAddress: data.secondaryEmailAddress,
+      phoneNumber: data.phoneNumber,
+      disableSystemAlerts: data.disableSystemAlerts,
+    };
+    try {
+      setError(false);
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/banking/hcuShazam.prg?cu=CRUISECU&op=enroll", {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+        redirect: "follow",
+        referrerPolicy: "strict-origin",
+        body: JSON.stringify(dataInfo),
+      });
+
+      const json = await res.json();
+      if (json.message === "Enrollment successful") {
+        setChangeSaved(true);
+      }
+
+      setTimeout(() => {
+        setChangeSaved(false);
+      }, 3000);
+      setError(false);
+      setLoading(false);
+    } catch (er) {
+      setError(true);
+      setLoading(false);
+    }
+  };
+
   return (
     <CardsContext.Provider
       value={{
@@ -489,11 +530,13 @@ export const CardsProvider = ({ children }) => {
         loading,
         cardBlock,
         cardDetail,
+        cardsSearched,
         travelMemos,
         changeSaved,
         loadingToggle,
         travelMemoSelected,
         alertSettingsValues,
+        enroll,
         loadCards,
         addUserCard,
         searchCards,

@@ -16,9 +16,9 @@ import Loader from "components/Loader/Loader";
 import { Alert, Box, Switch, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function UserSettings() {
+function Enroll() {
   const navigate = useNavigate();
-  const { loading, user, changeSaved, updateUserSettings } = useContext(CardsContext);
+  const { loading, changeSaved, enroll } = useContext(CardsContext);
 
   const [formValues, setFormValues] = useState({
     primaryEmailAddress: "",
@@ -145,10 +145,14 @@ function UserSettings() {
       [e.target.name]: e.target.checked,
     });
   };
-
+  /*   const handleInputChange = (e) => {
+    setMaxAmount(e.target.value);
+  }; */
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrorAlert(false);
+    console.log(formValues);
+    //  setAlertSettings(screen, checkboxes.primary, checkboxes.secondary, checkboxes.phone, maxAmount);
 
     if (formValues.primaryEmailAddress.trim() === "") {
       setFormErrors({ ...formValuesErrors, primaryEmailAddress: true });
@@ -181,7 +185,7 @@ function UserSettings() {
       setFormErrors({ ...formValuesErrors, confirmPhone: true });
       setErrorAlert(true);
     }
-    updateUserSettings({
+    enroll({
       primaryEmailAddress: formValues.primaryEmailAddress,
       secondaryEmailAddress: formValues.secondaryEmailAddress,
       phoneNumber: formValues.phone,
@@ -208,7 +212,7 @@ function UserSettings() {
               <Grid item xs={12} md={6}>
                 {changeSaved && (
                   <Alert severity="success" sx={{ marginBottom: "30px" }}>
-                    User saved successfully!
+                    Enroll user successfully!
                   </Alert>
                 )}
                 {errorAlert && (
@@ -218,20 +222,21 @@ function UserSettings() {
                 )}
                 <Box mb={6}>
                   <MDTypography variant="h3" fontWeight="medium" mb={1} mt={2}>
-                    User Settings
+                    User Enroll
                   </MDTypography>
                   <MDTypography variant="h5" fontWeight="medium">
                     Suspected Fraud Alerts
                   </MDTypography>
                   <Typography variant="body1" sx={{ fontSize: "16px" }} mb={1}>
-                    Send alerts for transactions suspected of fraud
+                    Enter the following destinations you would like to use for alerts and
+                    notifications.
                   </Typography>
 
                   <Typography variant="body1" sx={{ fontSize: "16px" }} fontWeight="bold" mb={1}>
                     Notifications
                   </Typography>
                   <Typography variant="body1" sx={{ fontSize: "16px" }} mb={1}>
-                    Primary Email ({user.primaryAddress})
+                    Primary Email
                   </Typography>
 
                   <TextField
@@ -262,7 +267,7 @@ function UserSettings() {
                     helperText={formValuesErrors.confirmPrimaryEmailAddress ? "Error!" : " "}
                   />
                   <Typography variant="body1" sx={{ fontSize: "16px" }} mb={1}>
-                    Secondary Email ({user.secondaryAddress})
+                    Secondary Email
                   </Typography>
 
                   <TextField
@@ -292,7 +297,7 @@ function UserSettings() {
                     helperText={formValuesErrors.confirmSecondaryEmailAddress ? "Error!" : " "}
                   />
                   <Typography variant="body1" sx={{ fontSize: "16px" }} mb={1}>
-                    Phone ({user.phone})
+                    Phone
                   </Typography>
 
                   <TextField
@@ -306,7 +311,7 @@ function UserSettings() {
                     type="number"
                     onBlur={onBlurPhone}
                     error={formValuesErrors.phone}
-                    helperText={formValuesErrors.phone ? "Error!" : " "}
+                    helperText={formValuesErrors.phone ? "Error! Only 10 characters" : " "}
                   />
                   <TextField
                     fullWidth
@@ -318,7 +323,7 @@ function UserSettings() {
                     onChange={handleChangeValue}
                     onBlur={onBlurConfirmPhone}
                     error={formValuesErrors.confirmPhone}
-                    helperText={formValuesErrors.confirmPhone ? "Error!" : " "}
+                    helperText={formValuesErrors.confirmPhone ? "Error! Only 10 characters" : " "}
                   />
                 </Box>
                 <Box>
@@ -342,7 +347,7 @@ function UserSettings() {
                     <MDButton
                       variant="gradient"
                       color="light"
-                      onClick={() => navigate("/dashboard/card-detail")}
+                      onClick={() => navigate("/dashboard")}
                     >
                       Cancel
                     </MDButton>
@@ -360,7 +365,7 @@ function UserSettings() {
                         formValuesErrors.confirmPhone
                       }
                     >
-                      Save
+                      Enroll
                     </MDButton>
                   </Box>
                 </Box>
@@ -373,4 +378,4 @@ function UserSettings() {
   );
 }
 
-export default UserSettings;
+export default Enroll;
