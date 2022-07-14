@@ -38,13 +38,6 @@ Coded by www.creative-tim.com
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
 
-import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
-
-import Profile from "layouts/profile";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
-
 // @mui icons
 import Icon from "@mui/material/Icon";
 import CardDetail from "layouts/cardDetail";
@@ -78,14 +71,19 @@ const routes = [
     key: "AddCard",
   },
   {
-    route: "/dashboard/user-settings",
+    type: "collapse",
+    name: "User Settings",
+    key: "user-settings",
+    icon: <Icon fontSize="small">person</Icon>,
+    route: "/user-settings",
     component: <UserSettings />,
-    key: "UserSettings",
   },
   {
-    route: "/dashboard/enroll",
+    name: "Enroll",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/enroll",
     component: <Enroll />,
-    key: "Enroll",
+    key: "enroll",
   },
   {
     route: "/dashboard/card-detail/transaction-amount",
@@ -113,51 +111,9 @@ const routes = [
     key: "TravelMemos",
   },
   {
-    type: "collapse",
     route: "/dashboard/card-detail/travel-memos/travel-memo",
     component: <TravelMemoDetail />,
     key: "TravelMemoDetail",
-  },
-  {
-    type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-  },
-  {
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
-  },
-
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-  },
-  {
-    type: "collapse",
-    name: "Sign In",
-    key: "sign-in",
-    icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
-    component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
   },
 ];
 
