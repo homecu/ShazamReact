@@ -24,10 +24,8 @@ function PaymentMethod() {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const navigateGo = (card) => {
-    console.log("hola");
     navigate("/dashboard/card-detail");
     setCardDetail(card);
-    console.log(card);
   };
 
   return (
@@ -36,7 +34,7 @@ function PaymentMethod() {
         <MDTypography variant="h6" fontWeight="medium">
           Cards Dashboard
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
+        <MDButton variant="gradient" color="dark" onClick={() => navigate("/dashboard/add-card")}>
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
           &nbsp;add new card
         </MDButton>

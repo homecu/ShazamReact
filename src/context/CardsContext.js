@@ -61,7 +61,6 @@ export const CardsProvider = ({ children }) => {
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(error);
       setLoading(false);
       setError(true);
     }
@@ -78,12 +77,11 @@ export const CardsProvider = ({ children }) => {
         referrerPolicy: "strict-origin",
       });
       const json = await res.json();
-      console.log(json);
+
       setCards(json.data);
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(error);
       setLoading(false);
       setError(true);
     }
@@ -107,12 +105,10 @@ export const CardsProvider = ({ children }) => {
 
       const json = await res.json();
 
-      console.log(json.data);
       setCardBlock(json.data.blocked);
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -142,7 +138,6 @@ export const CardsProvider = ({ children }) => {
       setLoadingToggle(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoadingToggle(false);
       setError(true);
     }
@@ -166,7 +161,6 @@ export const CardsProvider = ({ children }) => {
 
       const json = await res.json();
 
-      console.log(json.data);
       setAlertSettingsValues({
         ...alertSettingsValues,
         highDollarThreshold: json.data.highDollarThreshold,
@@ -178,7 +172,6 @@ export const CardsProvider = ({ children }) => {
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -213,8 +206,6 @@ export const CardsProvider = ({ children }) => {
         }
       );
 
-      const json = await res.json();
-
       if (res.status === 200) {
         setChangeSaved(true);
       }
@@ -222,19 +213,16 @@ export const CardsProvider = ({ children }) => {
         setChangeSaved(false);
       }, 3000);
 
-      console.log(json.data);
       // setCardBlock(json.data.blocked);
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
   };
 
   const setCardDetail = (res) => {
-    console.log(res);
     setCardDetailActive(res);
   };
 
@@ -259,7 +247,6 @@ export const CardsProvider = ({ children }) => {
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -294,7 +281,6 @@ export const CardsProvider = ({ children }) => {
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -345,7 +331,6 @@ export const CardsProvider = ({ children }) => {
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -370,12 +355,12 @@ export const CardsProvider = ({ children }) => {
         }
       );
       console.log(res);
+
       // const json = await res.json();
 
       setLoading(false);
       setError(false);
     } catch (er) {
-      console.log(er);
       setLoading(false);
       setError(true);
     }
@@ -404,11 +389,10 @@ export const CardsProvider = ({ children }) => {
 
       const json = await res.json();
       setCardsSearched(json.data.tokenPans);
-      console.log(res);
+
       setError(false);
       setLoading(false);
     } catch (er) {
-      console.log(er);
       setError(true);
       setLoading(false);
     }
@@ -436,10 +420,10 @@ export const CardsProvider = ({ children }) => {
       //   setCardBlock(!cardStatus);
       //   }
       console.log(res);
+
       setError(false);
       setLoading(false);
     } catch (er) {
-      console.log(er);
       setError(true);
       setLoading(false);
     }
@@ -475,11 +459,9 @@ export const CardsProvider = ({ children }) => {
         setChangeSaved(false);
       }, 3000);
 
-      console.log(res);
       setError(false);
       setLoading(false);
     } catch (er) {
-      console.log(er);
       setError(true);
       setLoading(false);
     }

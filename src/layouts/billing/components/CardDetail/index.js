@@ -61,7 +61,7 @@ function CardDetailComponent() {
         <MDTypography variant="h6" fontWeight="medium">
           Card Details
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
+        <MDButton variant="gradient" color="dark" onClick={() => navigate("/dashboard/add-card")}>
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
           &nbsp;add new card
         </MDButton>

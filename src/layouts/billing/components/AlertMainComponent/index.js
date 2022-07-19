@@ -74,7 +74,7 @@ function AlertMainComponent({ screen, title, headingTwo, headingThree }) {
         <MDTypography variant="h6" fontWeight="medium">
           {title}
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
+        <MDButton variant="gradient" color="dark" onClick={() => navigate("/dashboard/add-card")}>
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
           &nbsp;add new card
         </MDButton>

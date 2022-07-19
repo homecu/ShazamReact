@@ -139,7 +139,7 @@ function TravelMemoDetail() {
     const {
       target: { value },
     } = event;
-    console.log(value);
+
     setPlaceName(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -201,7 +201,7 @@ function TravelMemoDetail() {
         <MDTypography variant="h6" fontWeight="medium">
           Travel Memo
         </MDTypography>
-        <MDButton variant="gradient" color="dark">
+        <MDButton variant="gradient" color="dark" onClick={() => navigate("/dashboard/add-card")}>
           <Icon sx={{ fontWeight: "bold" }}>add</Icon>
           &nbsp;add new card
         </MDButton>

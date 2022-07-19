@@ -151,7 +151,7 @@ function Enroll() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrorAlert(false);
-    console.log(formValues);
+
     //  setAlertSettings(screen, checkboxes.primary, checkboxes.secondary, checkboxes.phone, maxAmount);
 
     if (formValues.primaryEmailAddress.trim() === "") {
