@@ -137,14 +137,15 @@ function UserSettings() {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const [disableSystemAlertsCheckbox, setDisableSystemAlertsCheckbox] = useState(true);
+  const [disableSystemAlertsCheckbox, setDisableSystemAlertsCheckbox] = useState(
+    user.disableSystemAlerts
+  );
 
-  const handleChangeCheckbox = (e) => {
-    setDisableSystemAlertsCheckbox({
-      ...disableSystemAlertsCheckbox,
-      [e.target.name]: e.target.checked,
-    });
-  };
+  useEffect(() => {
+    setDisableSystemAlertsCheckbox(user?.disableSystemAlerts);
+  }, [user]);
+
+  const handleChangeCheckbox = (e) => setDisableSystemAlertsCheckbox(e.target.checked);
 
   const handleSubmit = (event) => {
     event.preventDefault();

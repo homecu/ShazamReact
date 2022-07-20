@@ -13,6 +13,7 @@ export const CardsProvider = ({ children }) => {
     primaryAddress: "",
     secondaryAddress: "",
     phone: 0,
+    disableSystemAlerts: false,
   });
   const [changeSaved, setChangeSaved] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,7 @@ export const CardsProvider = ({ children }) => {
         primaryAddress: json.data.emailAddress,
         secondaryAddress: json.data.secondaryEmailAddress,
         phone: json.data.phoneNumber,
+        disableSystemAlerts: json.data.disableSystemAlerts,
       });
       setLoading(false);
       setError(false);
@@ -241,11 +243,17 @@ export const CardsProvider = ({ children }) => {
           body: JSON.stringify(data),
         }
       );
-
       const json = await res.json();
-      setTravelMemos(json.data.travelMemos);
-      setLoading(false);
-      setError(false);
+
+      if (json.message.includes("No Travel")) {
+        setTravelMemos([]);
+        setLoading(false);
+        setError(false);
+      } else {
+        setTravelMemos(json.data.travelMemos);
+        setLoading(false);
+        setError(false);
+      }
     } catch (er) {
       setLoading(false);
       setError(true);

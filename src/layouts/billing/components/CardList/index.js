@@ -42,7 +42,7 @@ function PaymentMethod() {
       <MDBox p={2}>
         <Grid container justifyContent="center" display="flex" alignItems="center">
           <Grid item xs={12}>
-            {error && <p>Se ha producido un error al obtener tarjeta</p>}
+            {error && <p>Error obtaining card info</p>}
           </Grid>
           {loading ? (
             <Grid item xs={12}>

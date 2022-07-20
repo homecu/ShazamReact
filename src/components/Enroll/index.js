@@ -140,10 +140,7 @@ function Enroll() {
   const [disableSystemAlertsCheckbox, setDisableSystemAlertsCheckbox] = useState(true);
 
   const handleChangeCheckbox = (e) => {
-    setDisableSystemAlertsCheckbox({
-      ...disableSystemAlertsCheckbox,
-      [e.target.name]: e.target.checked,
-    });
+    setDisableSystemAlertsCheckbox(e.target.checked);
   };
   /*   const handleInputChange = (e) => {
     setMaxAmount(e.target.value);
